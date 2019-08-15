@@ -14,8 +14,6 @@ const sqlGet = function(callback) {
 };
 
 const sqlSave = function(movie, callback) {
-    // console.log('in sqlSave');
-    // console.log(movie);
     let queryStr = `INSERT INTO movies (movieId, movieTitle, rating, posterURL, descrip, relYear) VALUES (${sqlDb.escape(movie.movieId)}, ${sqlDb.escape(movie.movieTitle)}, ${sqlDb.escape(movie.rating)}, ${sqlDb.escape(movie.posterURL)}, ${sqlDb.escape(movie.descrip || ' ')}, ${sqlDb.escape(movie.release_date)});`;
     sqlDb.query(queryStr, (err, results) => {
         if (err) {

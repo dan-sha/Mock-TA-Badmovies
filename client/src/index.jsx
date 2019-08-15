@@ -26,7 +26,6 @@ class App extends React.Component {
     // make an axios request to your server on the GET SEARCH endpoint
     axios.get(`/search/${movieGenre}`)
     .then((movieList) => {
-      // console.log('returned list: ');
       this.setState({movies: movieList.data});
     })
     .catch((err) => {
@@ -45,44 +44,26 @@ class App extends React.Component {
       descrip: movieObj.overview,
       relYear: movieObj.release_date
     };
-    let temp = [];
     axios.post('/save',
       sqlMovie)
     .then(() => {
-      // if (this.state.favorites[0].deway) {
-      //   temp = [];
-      // } else {
-      //   temp = this.state.favorites.slice();
-      // }
-      // temp.push(movieObj);
-      // this.setState({favorites: temp});
+      console.log('Movie Saved');
       this.refreshFavorites();
     })
     .catch((err) => {
       console.log(err);
     });
-    // console.log('save:');
-    // console.log(movieObj);
   }
 
   deleteMovie(movieObj) {
     // same as above but do something diff
     let toDelete = { movieId: movieObj.id };
-    console.log('toDelete:');
-    console.log(movieObj);
-    let temp = [];
+
     axios.post('/delete',
       toDelete)
     .then(() => {
-      // for (let i = 0; i < this.state.favorites.length; i++) {
-      //   if (this.state.favorites[i].id !== movieObj.id) {
-      //     temp.push(this.state.favorites[i]);
-      //   }
-      // }
+      console.log('Movie deleted');
       this.refreshFavorites();
-      // if (this.state.favorites.length === 0) {
-      //   this.setState({favorites: [{deway: "favorites"}]});
-      // } 
     })
     .catch((err) => {
       console.log(err);
@@ -107,13 +88,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('CDM ran');
     this.getMovies(28);
     this.refreshFavorites();
   }
 
   render () {
-    console.log('render ran');
     let scroll = {
       "overflowY": "scroll",
     };

@@ -23,7 +23,6 @@ app.use(express.static(__dirname + '/../client/dist'));
 //OPTION 1: Use regular routes
 
 app.get('/genres', function(req, res) {
-  // console.log(config.API_KEY);
   // make an axios request to get the official list of genres from themoviedb
   axios({
     method: 'GET',
@@ -41,9 +40,8 @@ app.get('/genres', function(req, res) {
 });
 
 app.get('/faves', function(req, res) {
-  // res.status(200).send('hi');
   sqlGet((err, results) => {
-    console.log(results);
+    // console.log(results);
     let temp = [];
     for (let i = 0; i < results.length; i++) {
       let obj = {
@@ -73,9 +71,6 @@ app.get('/search/:genre', function(req, res) {
     }
     })
   .then((movieList) => {
-    // console.log('appget: ');
-    // console.log('typeof: ' + typeof genreList);
-    // console.log(genreList.data);
     res.send(JSON.stringify(movieList.data.results));
   })
   .catch((err) => {
@@ -92,8 +87,6 @@ app.post('/save', function(req, res) {
 });
 
 app.post('/delete', function(req, res) {
-  console.log('delete:');
-  console.log(req.body);
   //remove movie from favorites
   sqlDelete(req.body, (err, results) => {
     res.status(201).send('deleted');
