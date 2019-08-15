@@ -12,6 +12,14 @@ class Movies extends React.Component {
   // If you're currently showing the fave list, delete the movie instead
   // You can tell which list is currently being rendered based on whether the prop "showFaves" is false (search results) or true (fave list) (within index.jsx)
 
+  currentAction(index) {
+    if (this.props.showFaves) {
+      this.props.deleteMovie(this.props.movies[index]);
+    } else {
+      this.props.saveMovie(this.props.movies[index]);
+    }
+
+  }
 
   render() {
     let baseURL = `https://image.tmdb.org/t/p/w300`;
@@ -19,17 +27,9 @@ class Movies extends React.Component {
     let descStyle = {
       "fontSize": "1vw",
     };
-    let currentAction = null;
-
-    console.log(`here's movies.jsx`);
-    console.log(this.props);
-
-    if (this.props.showFaves) {
-      currentAction = this.props.deleteMovie;
-    } else {
-      currentAction = this.props.saveMovie;
-    }
-
+    let titleStyle = {
+      "fontSize": "2vw",
+    };
 
     if (this.props.movies[0].deway) {
       return (<div></div>);
@@ -37,16 +37,17 @@ class Movies extends React.Component {
     return (
       <ul className="movies">
 
-        {this.props.movies.map((movie) => {
+        {this.props.movies.map((movie, index, movieArray) => {
           if (!movie.poster_path) {
             posterURL = 'https://lh3.googleusercontent.com/97gnjRiv2zIRnDupzfxYFoI-6zlIK3jKgb6KOCDf_tjWkY9epbITdSFIbiKhuccOqQ=w300';
           } else {
             posterURL = baseURL + movie.poster_path;
           }
           return (
-          <li className="movie_item" key={movie.id}>
-            <img src={posterURL} />
+          <li className="movie_item" key={index} onClick={() => this.currentAction(index)}>
+            <img src={posterURL} value={index} />
             <div className="movie_description">
+              <h1 style={titleStyle}>{movie.title}</h1>
               <h2 style={descStyle}>{movie.overview}</h2>
               <section className="movie_details">
                 <div className="movie_year">
