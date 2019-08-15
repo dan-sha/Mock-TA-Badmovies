@@ -14,22 +14,38 @@ class Movies extends React.Component {
 
 
   render() {
-    let posterURL = `https://image.tmdb.org/t/p/w300`;
+    let baseURL = `https://image.tmdb.org/t/p/w300`;
+    let posterURL = '';
     let descStyle = {
       "fontSize": "1vw",
     };
+    let currentAction = null;
 
-    // console.log(`here's movies.jsx`);
-    // console.log(this.props.movies);
+    console.log(`here's movies.jsx`);
+    console.log(this.props);
+
+    if (this.props.showFaves) {
+      currentAction = this.props.deleteMovie;
+    } else {
+      currentAction = this.props.saveMovie;
+    }
+
+
     if (this.props.movies[0].deway) {
       return (<div></div>);
     }
     return (
       <ul className="movies">
 
-        {this.props.movies.map((movie) => (
+        {this.props.movies.map((movie) => {
+          if (!movie.poster_path) {
+            posterURL = 'https://lh3.googleusercontent.com/97gnjRiv2zIRnDupzfxYFoI-6zlIK3jKgb6KOCDf_tjWkY9epbITdSFIbiKhuccOqQ=w300';
+          } else {
+            posterURL = baseURL + movie.poster_path;
+          }
+          return (
           <li className="movie_item" key={movie.id}>
-            <img src={posterURL + movie.poster_path} />
+            <img src={posterURL} />
             <div className="movie_description">
               <h2 style={descStyle}>{movie.overview}</h2>
               <section className="movie_details">
@@ -44,7 +60,8 @@ class Movies extends React.Component {
               </section>
             </div>
           </li>
-        ))}
+          );
+        })}
 
       </ul>
     );

@@ -18,16 +18,19 @@ class App extends React.Component {
     // you might have to do something important here!
     this.swapFavorites = this.swapFavorites.bind(this);
     this.getMovies = this.getMovies.bind(this);
+    this.saveMovie = this.saveMovie.bind(this);
+    this.deleteMovie = this.deleteMovie.bind(this);
   }
 
   getMovies(movieGenre) {
     // make an axios request to your server on the GET SEARCH endpoint
     axios.get(`/search/${movieGenre}`)
     .then((movieList) => {
-      // console.log('returned list: ');
+      console.log('returned list: ');
       this.setState({movies: movieList.data});
-      this.render();
-      // console.log(this.state.movies);
+      // this.render();
+      console.log(this.state.movies);
+      console.log('getMovies ran');
     })
     .catch((err) => {
       console.log(err);
@@ -35,12 +38,16 @@ class App extends React.Component {
     console.log('selected genre: ' + movieGenre);
   }
 
-  saveMovie() {
+  saveMovie(movieObj) {
     // same as above but do something diff
+    console.log('save:');
+    console.log(movieObj);
   }
 
-  deleteMovie() {
+  deleteMovie(movieObj) {
     // same as above but do something diff
+    console.log('delete');
+    console.log(movieObj);
   }
 
   swapFavorites() {
@@ -56,6 +63,7 @@ class App extends React.Component {
   }
 
   render () {
+    console.log('render ran');
     let scroll = {
       "overflowY": "scroll",
     };
@@ -65,7 +73,7 @@ class App extends React.Component {
         
         <div className="main" style={scroll}>
           <Search swapFavorites={this.swapFavorites} showFaves={this.state.showFaves} getMovies={this.getMovies}/>
-          <Movies movies={this.state.showFaves ? this.state.favorites : this.state.movies} showFaves={this.state.showFaves}/>
+          <Movies saveMovie={this.saveMovie} deleteMovie={this.deleteMovie} movies={this.state.showFaves ? this.state.favorites : this.state.movies} showFaves={this.state.showFaves}/>
         </div>
       </div>
     );
