@@ -30,8 +30,9 @@ class Movies extends React.Component {
     let titleStyle = {
       "fontSize": "2vw",
     };
+    let rDate = null;
 
-    if (this.props.movies[0].deway) {
+    if (this.props.movies.length === 0) {
       return (<div></div>);
     }
     return (
@@ -43,6 +44,11 @@ class Movies extends React.Component {
           } else {
             posterURL = baseURL + movie.poster_path;
           }
+          if (movie.release_date) {
+            rDate = movie.release_date.slice(0,4);
+          } else {
+            rDate = 'Unknown';
+          }
           return (
           <li className="movie_item" key={index} onClick={() => this.currentAction(index)}>
             <img src={posterURL} value={index} />
@@ -52,7 +58,7 @@ class Movies extends React.Component {
               <section className="movie_details">
                 <div className="movie_year">
                   <span className="title">Year</span>
-                  <span>{movie.release_date.slice(0,4)}</span>
+                  <span>{rDate}</span>
                 </div>
                 <div className="movie_rating">
                     <span className="title">Rating</span>

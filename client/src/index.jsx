@@ -26,11 +26,8 @@ class App extends React.Component {
     // make an axios request to your server on the GET SEARCH endpoint
     axios.get(`/search/${movieGenre}`)
     .then((movieList) => {
-      console.log('returned list: ');
+      // console.log('returned list: ');
       this.setState({movies: movieList.data});
-      // this.render();
-      console.log(this.state.movies);
-      console.log('getMovies ran');
     })
     .catch((err) => {
       console.log(err);
@@ -40,14 +37,66 @@ class App extends React.Component {
 
   saveMovie(movieObj) {
     // same as above but do something diff
-    console.log('save:');
-    console.log(movieObj);
+    let sqlMovie = {
+      movieId: movieObj.id,
+      movieTitle: movieObj.title,
+      rating: movieObj.vote_average,
+      posterURL: movieObj.poster_path,
+      descrip: movieObj.overview,
+      relYear: movieObj.release_date
+    };
+    let temp = [];
+    axios.post('/save',
+      sqlMovie)
+    .then(() => {
+      // if (this.state.favorites[0].deway) {
+      //   temp = [];
+      // } else {
+      //   temp = this.state.favorites.slice();
+      // }
+      // temp.push(movieObj);
+      // this.setState({favorites: temp});
+      this.refreshFavorites();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    // console.log('save:');
+    // console.log(movieObj);
   }
 
   deleteMovie(movieObj) {
     // same as above but do something diff
-    console.log('delete');
+    let toDelete = { movieId: movieObj.id };
+    console.log('toDelete:');
     console.log(movieObj);
+    let temp = [];
+    axios.post('/delete',
+      toDelete)
+    .then(() => {
+      // for (let i = 0; i < this.state.favorites.length; i++) {
+      //   if (this.state.favorites[i].id !== movieObj.id) {
+      //     temp.push(this.state.favorites[i]);
+      //   }
+      // }
+      this.refreshFavorites();
+      // if (this.state.favorites.length === 0) {
+      //   this.setState({favorites: [{deway: "favorites"}]});
+      // } 
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  refreshFavorites() {
+    axios.get('/faves')
+    .then((results) => {
+      this.setState({favorites: results.data});
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   swapFavorites() {
@@ -60,6 +109,7 @@ class App extends React.Component {
   componentDidMount() {
     // console.log('CDM ran');
     this.getMovies(28);
+    this.refreshFavorites();
   }
 
   render () {

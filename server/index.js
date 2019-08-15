@@ -4,7 +4,7 @@ var request = require('request')
 var app = express();
 const axios = require('axios');
 const config = require('../config.js');
-const { sqlGet, sqlSave } = require('./models/movieModel.js')
+const { sqlGet, sqlSave, sqlDelete } = require('./models/movieModel.js')
 
 // Sign up and get your moviedb API key here:
 // https://www.themoviedb.org/account/signup
@@ -40,6 +40,26 @@ app.get('/genres', function(req, res) {
   // send back
 });
 
+app.get('/faves', function(req, res) {
+  // res.status(200).send('hi');
+  sqlGet((err, results) => {
+    console.log(results);
+    let temp = [];
+    for (let i = 0; i < results.length; i++) {
+      let obj = {
+        id: results[i].movieId,
+        poster_path: results[i].posterURL,
+        title: results[i].movieTitle,
+        overview: results[i].descrip,
+        release_date: results[i].relYear,
+        vote_average: results[i].rating
+      };
+      temp.push(obj);
+    }
+    res.status(200).send(temp);
+  });
+});
+
 app.get('/search/:genre', function(req, res) {
   // use this endpoint to search for movies by genres (using API key): https://api.themoviedb.org/3/discover/movie
   let genre = req.params.genre + '';
@@ -64,22 +84,20 @@ app.get('/search/:genre', function(req, res) {
   // and sort them by votes (worst first) using the search parameters in themoviedb API
 });
 
-app.get('/test', function(req, res) {
-  sqlGet((err, results) => {
-    res.status(200).send(results);
-  })
-});
-
 app.post('/save', function(req, res) {
-  console.log(req.body);
   //save movie as favorite
-
+  sqlSave(req.body, (err, results) => {
+    res.status(200).send('done');
+  });
 });
 
 app.post('/delete', function(req, res) {
-
+  console.log('delete:');
+  console.log(req.body);
   //remove movie from favorites
-
+  sqlDelete(req.body, (err, results) => {
+    res.status(201).send('deleted');
+  });
 });
 
 
