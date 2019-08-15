@@ -4,6 +4,7 @@ import $ from 'jquery';
 // import AnyComponent from './components/filename.jsx'
 import Search from './components/Search.jsx'
 import Movies from './components/Movies.jsx'
+const axios = require('axios');
 
 class App extends React.Component {
   constructor(props) {
@@ -15,10 +16,23 @@ class App extends React.Component {
     };
     
     // you might have to do something important here!
+    this.swapFavorites = this.swapFavorites.bind(this);
+    this.getMovies = this.getMovies.bind(this);
   }
 
-  getMovies() {
+  getMovies(movieGenre) {
     // make an axios request to your server on the GET SEARCH endpoint
+    axios.get(`/search/${movieGenre}`)
+    .then((movieList) => {
+      // console.log('returned list: ');
+      this.setState({movies: movieList.data});
+      this.render();
+      // console.log(this.state.movies);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    console.log('selected genre: ' + movieGenre);
   }
 
   saveMovie() {
@@ -36,13 +50,21 @@ class App extends React.Component {
     });
   }
 
+  componentDidMount() {
+    // console.log('CDM ran');
+    this.getMovies(28);
+  }
+
   render () {
+    let scroll = {
+      "overflowY": "scroll",
+    };
   	return (
       <div className="app">
         <header className="navbar"><h1>Bad Movies</h1></header> 
         
-        <div className="main">
-          <Search swapFavorites={this.swapFavorites} showFaves={this.state.showFaves}/>
+        <div className="main" style={scroll}>
+          <Search swapFavorites={this.swapFavorites} showFaves={this.state.showFaves} getMovies={this.getMovies}/>
           <Movies movies={this.state.showFaves ? this.state.favorites : this.state.movies} showFaves={this.state.showFaves}/>
         </div>
       </div>
